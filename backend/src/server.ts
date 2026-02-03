@@ -1,9 +1,26 @@
+import cors from "cors";
 import express from "express";
 import ticketRoutes from "./routes/ticketRoutes";
 import { errorHandler } from "./middleware/errorHandler";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mini-support-web.vercel.app",
+];
+
 const app = express();
 
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
+  }),
+);
 app.use(express.json());
 
 app.use("/tickets", ticketRoutes);
